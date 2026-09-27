@@ -1,10 +1,17 @@
-export type LanguageId = "spanish" | "french" | "japanese";
+export type LanguageId = "spanish" | "french" | "japanese" | "german";
 
 export type ActivityType =
   | "multiple-choice"
   | "translation"
   | "listening"
   | "speaking";
+
+export interface LanguageTheme {
+  /** Gradient stops drawn from the language's flag colors (2-3 stops). */
+  gradient: [string, string] | [string, string, string];
+  /** Flag-derived accent color for text/icons on light surfaces. */
+  accent: string;
+}
 
 export interface Language {
   id: LanguageId;
@@ -14,6 +21,7 @@ export interface Language {
   flag: string;
   description: string;
   greeting: string;
+  theme: LanguageTheme;
 }
 
 export interface Unit {
@@ -90,7 +98,7 @@ export interface AITeacherPrompt {
   suggestedTopics: string[];
 }
 
-export type LessonImageKey = "parisCafe" | "earth" | "treasure" | "palace";
+export type LessonImageKey = "cafeScene" | "earth" | "treasure" | "palace";
 
 export interface Lesson {
   id: string;

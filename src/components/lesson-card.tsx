@@ -27,7 +27,9 @@ export function LessonCard({ lesson, status, onPress }: LessonCardProps) {
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={lesson.title}
+      accessibilityState={{ disabled: isLocked }}
       onPress={onPress}
+      disabled={isLocked}
       className={`flex-row items-center gap-3 rounded-card border px-4 py-3 active:opacity-80 active:scale-[0.99] ${
         isCurrent ? "border-2 border-tucana-teal bg-tucana-teal/5 shadow-sm" : "border-border/60 bg-background"
       }`}
