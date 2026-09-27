@@ -1,22 +1,18 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Image } from "@/components/image";
 import { LessonCard } from "@/components/lesson-card";
-import { images } from "@/constants/images";
+import { getLessonImageSource } from "@/constants/images";
 import { languages } from "@/data/languages";
 import { lessons } from "@/data/lessons";
 import { units } from "@/data/units";
 import { useLanguageStore } from "@/store/language";
 import { useProgressStore } from "@/store/progress";
 
-type Tab = "lessons" | "practice";
-
 export default function LearnScreen() {
-  const [activeTab, setActiveTab] = useState<Tab>("lessons");
   const selectedLanguageId = useLanguageStore((state) => state.selectedLanguageId);
   const completedItemIds = useProgressStore((state) => state.completedItemIds);
 
@@ -61,60 +57,27 @@ export default function LearnScreen() {
           </Pressable>
         </View>
 
-        <Image source={images.parisCafe} contentFit="cover" className="mt-3 h-64 w-full rounded-b-card" />
+        <Image
+          source={getLessonImageSource(currentLesson)}
+          contentFit="cover"
+          className="mt-3 h-64 w-full rounded-b-card"
+        />
 
-        <View className="-mt-6 flex-row gap-1 self-center rounded-pill border border-border/40 bg-background p-1 shadow-md">
-          <Pressable
-            onPress={() => setActiveTab("lessons")}
-            className={`rounded-pill px-6 py-3 ${activeTab === "lessons" ? "bg-surface" : ""}`}
-          >
-            <Text
-              className={`font-poppins-semibold text-body-md ${
-                activeTab === "lessons" ? "text-tucana-teal-deep" : "text-ink-muted"
-              }`}
-            >
-              Lessons
-            </Text>
-          </Pressable>
-          <Pressable
-            onPress={() => setActiveTab("practice")}
-            className={`rounded-pill px-6 py-3 ${activeTab === "practice" ? "bg-surface" : ""}`}
-          >
-            <Text
-              className={`font-poppins-semibold text-body-md ${
-                activeTab === "practice" ? "text-tucana-teal-deep" : "text-ink-muted"
-              }`}
-            >
-              Practice
-            </Text>
-          </Pressable>
-        </View>
-
-        <View className="mt-4 gap-3 px-screen">
-          {activeTab === "lessons" ? (
-            unitLessons.map((lesson) => (
-              <LessonCard
-                key={lesson.id}
-                lesson={lesson}
-                status={
-                  completedItemIds.includes(lesson.id)
-                    ? "completed"
-                    : lesson.id === currentLesson?.id
-                      ? "current"
-                      : "locked"
-                }
-                onPress={() => router.push({ pathname: "/lesson/[id]", params: { id: lesson.id } })}
-              />
-            ))
-          ) : (
-            <View className="items-center rounded-card border border-border/60 bg-surface px-5 py-8">
-              <Ionicons name="barbell-outline" size={28} color="#64748b" />
-              <Text className="mt-2 font-poppins-semibold text-body-lg text-ink">Practice coming soon</Text>
-              <Text className="mt-1 text-center font-poppins text-body-sm text-ink-muted">
-                Vocabulary review and quick drills will show up here.
-              </Text>
-            </View>
-          )}
+        <View className="mt-6 gap-3 px-screen">
+          {unitLessons.map((lesson) => (
+            <LessonCard
+              key={lesson.id}
+              lesson={lesson}
+              status={
+                completedItemIds.includes(lesson.id)
+                  ? "completed"
+                  : lesson.id === currentLesson?.id
+                    ? "current"
+                    : "locked"
+              }
+              onPress={() => router.push({ pathname: "/lesson/[id]", params: { id: lesson.id } })}
+            />
+          ))}
         </View>
       </ScrollView>
     </SafeAreaView>
